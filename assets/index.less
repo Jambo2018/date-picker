@@ -1,8 +1,25 @@
 @prefix-cls: rc-picker;
 
-@background-color: rgb(255, 240, 255);
+@background-color: #fff;
 
 @input-placeholder-color: hsv(0, 0, 75%);
+@--border-color: #ededf1;
+@--text-color: #111119;
+@--option-bg-color: #ededf1;
+.week-header {
+  width: 100%;
+  height: 36px;
+  border-bottom: 1px solid @--border-color;
+}
+
+.week-day {
+  flex: 1 1;
+  color: #9c9c9c;
+  font-weight: 700;
+  font-size: 12px;
+  font-family: Poppins;
+  text-align: center;
+}
 
 .placeholder(@color: @input-placeholder-color) {
   // Firefox
@@ -19,6 +36,9 @@
   }
 }
 
+
+
+
 .@{prefix-cls} {
   display: inline-flex;
 
@@ -32,9 +52,14 @@
   &-panel {
     display: inline-block;
     vertical-align: top;
-    background: @background-color;
-    border: 1px solid #666;
-
+    background-color: @background-color;
+    border: 1px solid @--border-color;
+    border-radius: 8px;
+    transition: margin 0.3s;
+    // top: -webkit-calc(100% + 6px);
+    // top: calc(100% + 6px);
+    // -webkit-animation: range-picker_fadeIn__3dB_H .5s;
+    // animation: range-picker_fadeIn__3dB_H .5s;
     &-focused {
       border-color: blue;
     }
@@ -56,25 +81,33 @@
 
     table {
       text-align: center;
-      border-collapse: collapse;
     }
   }
 
   // Header
   &-header {
     display: flex;
-
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 56px;
     > * {
       flex: none;
     }
 
     &-view {
       flex: auto;
+      width: 100%;
+      padding: 0 13px;
       text-align: center;
-
       > button {
         padding: 0;
-        border: 0;
+        color: @--text-color;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: Poppins;
+        // border: 0;
       }
     }
   }
@@ -101,10 +134,11 @@
       border: none;
       outline: none;
       cursor: pointer;
-      transition: background 0.3s, border 0.3s;
+      // transition: background 0.3s, border 0.3s;
 
       &:hover {
-        background: fade(blue, 30%);
+        background: @--option-bg-color;
+        border-radius: 20px;
       }
     }
 
@@ -113,40 +147,47 @@
     }
 
     &-in-range > &-inner {
-      background: fade(blue, 5%);
+      background-color: @--option-bg-color;
     }
-    &-range-hover-start,
-    &-range-hover-end,
+    &-range-hover-start {
+      background-color: @--option-bg-color;
+      border-radius: 20px 0 0 20px;
+    }
+    &-range-hover-end {
+      background-color: @--option-bg-color;
+      border-radius: 0 20px 20px 0;
+    }
     &-range-hover {
-      position: relative;
-      &::after {
-        position: absolute;
-        top: 3px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border: 1px solid green;
-        border-right: 0;
-        border-left: 0;
-        content: '';
-        pointer-events: none;
-      }
+      background-color: @--option-bg-color;
     }
 
+
     &-range-hover-start::after {
-      border-left: 1px solid green !important;
+      // border-left: 1px solid green !important;
     }
     &-range-hover-end::after {
-      border-right: 1px solid green !important;
+      // border-right: 1px solid green !important;
     }
 
     &-today > &-inner {
       border: 1px solid blue;
     }
+
+    &-range-start{
+      border-radius: 20px 0 0 20px;
+      background-color:@--option-bg-color ;
+
+    }
+    &-range-end{
+      border-radius: 0 20px 20px 0;
+      background-color:@--option-bg-color ;
+    }
     &-range-start > &-inner,
     &-range-end > &-inner,
     &-selected > &-inner {
-      background: fade(blue, 20%);
+      color: #fff;
+      background: #5a66f9;
+      border-radius: 20px;
     }
   }
 
@@ -183,13 +224,13 @@
     &-row {
       &:hover {
         .@{prefix-cls}-cell {
-          background: red;
+          // background: red;
         }
       }
 
       &-selected {
         .@{prefix-cls}-cell {
-          background: rgba(0, 0, 255, 0.3);
+          background: #5a66f9;
         }
       }
     }
@@ -207,14 +248,22 @@
 
     .@{prefix-cls}-cell:hover > .@{prefix-cls}-cell-inner,
     .@{prefix-cls}-cell-selected > .@{prefix-cls}-cell-inner {
-      background: transparent;
+      // background: transparent;
     }
   }
 
   // ====================== Date Panel ======================
   &-date-panel {
+    padding: 0 16px;
     .@{prefix-cls}-cell-inner {
-      width: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: Poppins;
     }
   }
 
@@ -225,6 +274,7 @@
     .@{prefix-cls}-content {
       display: flex;
       max-height: 200px;
+      border-spacing: 0;
     }
 
     &-column {
@@ -344,7 +394,7 @@
   // ======================= Dropdown =======================
   &-dropdown {
     position: absolute;
-    box-shadow: 0 0 1px red;
+    // box-shadow: 0 0 1px red;
 
     &-range {
       padding: 10px 0;

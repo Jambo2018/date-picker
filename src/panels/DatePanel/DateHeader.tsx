@@ -51,8 +51,7 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
 
   // =================== Month & Year ===================
   const yearNode: React.ReactNode = (
-    <button
-      type="button"
+    <span
       key="year"
       onClick={onYearClick}
       tabIndex={-1}
@@ -63,11 +62,10 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
         format: locale.yearFormat,
         generateConfig,
       })}
-    </button>
+    </span>
   );
   const monthNode: React.ReactNode = (
-    <button
-      type="button"
+    <span
       key="month"
       onClick={onMonthClick}
       tabIndex={-1}
@@ -80,7 +78,7 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
             generateConfig,
           })
         : monthsLocale[month]}
-    </button>
+    </span>
   );
 
   const monthYearNodes = locale.monthBeforeYear ? [monthNode, yearNode] : [yearNode, monthNode];
@@ -94,7 +92,7 @@ function DateHeader<DateType>(props: DateHeaderProps<DateType>) {
       onNext={onNextMonth}
       onSuperNext={onNextYear}
     >
-      {monthYearNodes}
+     {monthYearNodes}
     </Header>
   );
 }

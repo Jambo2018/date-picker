@@ -125,10 +125,10 @@ export default function PanelBody<DateType>({
 
   return (
     <div className={`${prefixCls}-body`}>
-      <table className={`${prefixCls}-content`}>
+      <table className={`${prefixCls}-content`} border="0" cellspacing="0" cellpadding="0">
         {headerCells && (
-          <thead>
-            <tr>{headerCells}</tr>
+          <thead className="week-header">
+            <tr className="week-day">{headerCells}</tr>
           </thead>
         )}
         <tbody>{rows}</tbody>
