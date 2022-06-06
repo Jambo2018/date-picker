@@ -911,94 +911,13 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
   const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
 
-  function renderPanels() {
-    // let panels: React.ReactNode;
-    const panels: React.ReactNode = renderPanel();
+  const rangePanel = (
+    <div
+      className={classNames(`${prefixCls}-range-wrapper`, `${prefixCls}-${picker}-range-wrapper`)}
+      style={{ minWidth: popupMinWidth }}
+    >
+      <div ref={arrowRef} className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} />
 
-    const extraNode = getExtraFooter(
-      prefixCls,
-      mergedModes[mergedActivePickerIndex],
-      renderExtraFooter,
-    );
-
-    const rangesNode = getRanges({
-      prefixCls,
-      components,
-      needConfirmButton,
-      okDisabled:
-        !getValue(selectedValue, mergedActivePickerIndex) ||
-        (disabledDate && disabledDate(selectedValue[mergedActivePickerIndex])),
-      locale,
-      rangeList,
-      onOk: () => {
-        if (getValue(selectedValue, mergedActivePickerIndex)) {
-          // triggerChangeOld(selectedValue);
-          triggerChange(selectedValue, mergedActivePickerIndex);
-          if (onOk) {
-            onOk(selectedValue);
-          }
-        }
-      },
-    });
-
-    // if (picker !== 'time' && !showTime) {
-    //   const viewDate = getViewDate(mergedActivePickerIndex);
-    //   const nextViewDate = getClosingViewDate(viewDate, picker, generateConfig);
-    //   const currentMode = mergedModes[mergedActivePickerIndex];
-
-    //   const showDoublePanel = currentMode === picker;
-    //   const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
-    //     pickerValue: viewDate,
-    //     onPickerValueChange: (newViewDate) => {
-    //       setViewDate(newViewDate, mergedActivePickerIndex);
-    //     },
-    //   });
-    //   const rightPanel = renderPanel('right', {
-    //     pickerValue: nextViewDate,
-    //     onPickerValueChange: (newViewDate) => {
-    //       setViewDate(
-    //         getClosingViewDate(newViewDate, picker, generateConfig, -1),
-    //         mergedActivePickerIndex,
-    //       );
-    //     },
-    //   });
-
-    //   if (direction === 'rtl') {
-    //     panels = (
-    //       <>
-    //         {rightPanel}
-    //         {showDoublePanel && leftPanel}
-    //       </>
-    //     );
-    //   } else {
-    //     panels = (
-    //       <>
-    //         {leftPanel}
-    //         {showDoublePanel && rightPanel}
-    //       </>
-    //     );
-    //   }
-    // } else {
-    //   panels = renderPanel();
-    // }
-
-    let mergedNodes: React.ReactNode = (
-      <>
-        <div className={`${prefixCls}-panels`}>{panels}</div>
-        {(extraNode || rangesNode) && (
-          <div className={`${prefixCls}-footer`}>
-            {extraNode}
-            {rangesNode}
-          </div>
-        )}
-      </>
-    );
-
-    if (panelRender) {
-      mergedNodes = panelRender(mergedNodes);
-    }
-
-    return (
       <div
         className={`${prefixCls}-panel-container`}
         style={{ marginLeft: panelLeft }}
@@ -1007,19 +926,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           e.preventDefault();
         }}
       >
-        {mergedNodes}
+        <div className={`${prefixCls}-panels`}>{renderPanel()}</div>
       </div>
-    );
-  }
-
-  const rangePanel = (
-    <div
-      className={classNames(`${prefixCls}-range-wrapper`, `${prefixCls}-${picker}-range-wrapper`)}
-      style={{ minWidth: popupMinWidth }}
-    >
-      <div ref={arrowRef} className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} />
-
-      {renderPanels()}
     </div>
   );
 
@@ -1214,7 +1122,6 @@ class RangePicker<DateType> extends React.Component<RangePickerProps<DateType>> 
       this.pickerRef.current.blur();
     }
   };
-
   render() {
     return (
       <InnerRangePicker<DateType>

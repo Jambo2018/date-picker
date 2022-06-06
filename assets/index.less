@@ -6,21 +6,27 @@
 @--border-color: #ededf1;
 @--text-color: #111119;
 @--option-bg-color: #ededf1;
+@--table-bg-color: #fff;
+@--main-color: #7d87f9;
+@--main-color-deep: #5a66f9;
+@--main-color-disabled:rgba(90, 102, 249, 0.6);
+
 .week-header {
-  width: 100%;
-  height: 36px;
   position: relative;
-  &::after{
-    content: '';
+  height: 36px;
+  &::after {
     position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
     border-bottom: 1px solid @--border-color;
+    content: '';
   }
 }
-
+.head-body-span {
+  height:8;
+}
 .week-day {
   flex: 1 1;
   color: #9c9c9c;
@@ -46,6 +52,9 @@
 }
 
 .@{prefix-cls} {
+  &-body {
+    margin-bottom: 18px;
+  }
   display: inline-flex;
   &-header-view {
     color: @--text-color;
@@ -80,6 +89,43 @@
 
     &-rtl {
       direction: rtl;
+    }
+
+    &-filter {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      height: 48px;
+      button {
+        width: 96px;
+        height: 32px;
+        font-weight: 700;
+        font-size: 14px;
+        background: @--table-bg-color;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .confirm-btn {
+        color: #fff;
+        background-color: @--main-color;
+        border: none !important;
+
+        &:hover {
+          background-color: @--main-color-deep;
+        }
+      }
+      .disblad-btn {
+        background-color: @--main-color-disabled;
+        border: none !important;
+        cursor: default;
+      }
+      .cancel-btn {
+        margin-right: 24px;
+        color: @--text-color;
+        border: 1px solid @--border-color;
+      }
     }
   }
 
@@ -166,25 +212,23 @@
     &-range-hover-start {
       background-color: @--option-bg-color;
       border-radius: 20px 0 0 20px;
+      // border-radius: 20px;
     }
     &-range-hover-end {
       background-color: @--option-bg-color;
       border-radius: 0 20px 20px 0;
+      // border-radius: 20px;
     }
     &-range-hover {
       background-color: @--option-bg-color;
     }
 
-    &-range-hover-start::after {
-      // border-left: 1px solid green !important;
-    }
-    &-range-hover-end::after {
-      // border-right: 1px solid green !important;
-    }
-
-    &-today > &-inner {
-      border: 1px solid blue;
-    }
+    // &-range-hover-start::after {
+    //   // border-left: 1px solid green !important;
+    // }
+    // &-range-hover-end::after {
+    //   // border-right: 1px solid green !important;
+    // }
 
     &-range-start {
       background-color: @--option-bg-color;
@@ -194,18 +238,23 @@
       background-color: @--option-bg-color;
       border-radius: 0 20px 20px 0;
     }
+
+    &-today > &-inner {
+      border: 1px solid @--main-color-deep;
+      border-radius: 20px;
+    }
     &-range-start > &-inner,
     &-range-end > &-inner,
     &-selected > &-inner {
       color: #fff;
-      background: #5a66f9;
+      background: @--main-color-deep;
       border-radius: 20px;
     }
   }
 
   &-footer,
   &-picker-footer {
-    background: green;
+    // background: green;
   }
 
   &-ranges {

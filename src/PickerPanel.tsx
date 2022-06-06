@@ -468,71 +468,71 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   }
 
   // ============================ Footer ============================
-  let extraFooter: React.ReactNode;
-  let rangesNode: React.ReactNode;
+  // let extraFooter: React.ReactNode;
+  // let rangesNode: React.ReactNode;
 
-  const onNow = () => {
-    const now = generateConfig.getNow();
-    const lowerBoundTime = getLowerBoundTime(
-      generateConfig.getHour(now),
-      generateConfig.getMinute(now),
-      generateConfig.getSecond(now),
-      isHourStepValid ? hourStep : 1,
-      isMinuteStepValid ? minuteStep : 1,
-      isSecondStepValid ? secondStep : 1,
-    );
-    const adjustedNow = setTime(
-      generateConfig,
-      now,
-      lowerBoundTime[0], // hour
-      lowerBoundTime[1], // minute
-      lowerBoundTime[2], // second
-    );
-    triggerSelect(adjustedNow, 'submit');
-  };
+  // const onNow = () => {
+  //   const now = generateConfig.getNow();
+  //   const lowerBoundTime = getLowerBoundTime(
+  //     generateConfig.getHour(now),
+  //     generateConfig.getMinute(now),
+  //     generateConfig.getSecond(now),
+  //     isHourStepValid ? hourStep : 1,
+  //     isMinuteStepValid ? minuteStep : 1,
+  //     isSecondStepValid ? secondStep : 1,
+  //   );
+  //   const adjustedNow = setTime(
+  //     generateConfig,
+  //     now,
+  //     lowerBoundTime[0], // hour
+  //     lowerBoundTime[1], // minute
+  //     lowerBoundTime[2], // second
+  //   );
+  //   triggerSelect(adjustedNow, 'submit');
+  // };
 
-  if (!hideRanges) {
-    extraFooter = getExtraFooter(prefixCls, mergedMode, renderExtraFooter);
-    rangesNode = getRanges({
-      prefixCls,
-      components,
-      needConfirmButton,
-      okDisabled: !mergedValue || (disabledDate && disabledDate(mergedValue)),
-      locale,
-      showNow,
-      onNow: needConfirmButton && onNow,
-      onOk: () => {
-        if (mergedValue) {
-          triggerSelect(mergedValue, 'submit', true);
-          if (onOk) {
-            onOk(mergedValue);
-          }
-        }
-      },
-    });
-  }
+  // if (!hideRanges) {
+  //   extraFooter = getExtraFooter(prefixCls, mergedMode, renderExtraFooter);
+  //   rangesNode = getRanges({
+  //     prefixCls,
+  //     components,
+  //     needConfirmButton,
+  //     okDisabled: !mergedValue || (disabledDate && disabledDate(mergedValue)),
+  //     locale,
+  //     showNow,
+  //     onNow: needConfirmButton && onNow,
+  //     onOk: () => {
+  //       if (mergedValue) {
+  //         triggerSelect(mergedValue, 'submit', true);
+  //         if (onOk) {
+  //           onOk(mergedValue);
+  //         }
+  //       }
+  //     },
+  //   });
+  // }
 
-  let todayNode: React.ReactNode;
+  // let todayNode: React.ReactNode;
 
-  if (showToday && mergedMode === 'date' && picker === 'date' && !showTime) {
-    const now = generateConfig.getNow();
-    const todayCls = `${prefixCls}-today-btn`;
-    const disabled = disabledDate && disabledDate(now);
-    todayNode = (
-      <a
-        className={classNames(todayCls, disabled && `${todayCls}-disabled`)}
-        aria-disabled={disabled}
-        onClick={() => {
-          if (!disabled) {
-            triggerSelect(now, 'mouse', true);
-          }
-        }}
-      >
-        {locale.today}
-      </a>
-    );
-  }
-
+  // if (showToday && mergedMode === 'date' && picker === 'date' && !showTime) {
+  //   const now = generateConfig.getNow();
+  //   const todayCls = `${prefixCls}-today-btn`;
+  //   const disabled = disabledDate && disabledDate(now);
+  //   todayNode = (
+  //     <a
+  //       className={classNames(todayCls, disabled && `${todayCls}-disabled`)}
+  //       aria-disabled={disabled}
+  //       onClick={() => {
+  //         if (!disabled) {
+  //           triggerSelect(now, 'mouse', true);
+  //         }
+  //       }}
+  //     >
+  //       {locale.today}
+  //     </a>
+  //   );
+  // }
+  console.log('picker', mergedMode);
   return (
     <PanelContext.Provider
       value={{
@@ -558,13 +558,12 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         ref={panelDivRef}
       >
         {panelNode}
-        {extraFooter || rangesNode || todayNode ? (
-          <div className={`${prefixCls}-footer`}>
-            {extraFooter}
-            {rangesNode}
-            {todayNode}
+        {mergedMode === 'date' && (
+          <div className={classNames(`${prefixCls}-panel-filter`)}>
+            <button className={classNames(`cancel-btn`)}>Cancel</button>
+            <button className={classNames(`confirm-btn`)}>Filter</button>
           </div>
-        ) : null}
+        )}
       </div>
     </PanelContext.Provider>
   );

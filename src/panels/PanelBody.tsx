@@ -123,6 +123,10 @@ export default function PanelBody<DateType>({
     );
   }
 
+  const head_body_span: React.ReactNode[] = [];
+  for (let j = 0; j < colNum; j += 1) {
+    head_body_span.push(<td className="head-body-span" />);
+  }
   const cellSpacing = React.useMemo(() => {
     if (colNum === 3) return (40 * 7 - 90 * 3) / 2;
     return 0;
@@ -135,7 +139,10 @@ export default function PanelBody<DateType>({
             <tr className="week-day">{headerCells}</tr>
           </thead>
         )}
-        <tbody>{rows}</tbody>
+        <tbody>
+          {head_body_span}
+          {rows}
+        </tbody>
       </table>
     </div>
   );

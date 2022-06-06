@@ -10,9 +10,10 @@ export default function useCellClassName<DateType>({
   hoverRangedValue,
   isInView,
   isSameCell,
-  offsetCell,
+  // offsetCell,
   today,
   value,
+  showHover,
 }: {
   cellPrefixCls: string;
   generateConfig: GenerateConfig<DateType>;
@@ -26,10 +27,11 @@ export default function useCellClassName<DateType>({
   hoverRangedValue?: RangeValue<DateType>;
   today?: NullableDateType<DateType>;
   value?: NullableDateType<DateType>;
+  showHover?: boolean
 }) {
   function getClassName(currentDate: DateType) {
-    const prevDate = offsetCell(currentDate, -1);
-    const nextDate = offsetCell(currentDate, 1);
+    // const prevDate = offsetCell(currentDate, -1);
+    // const nextDate = offsetCell(currentDate, 1);
 
     const rangeStart = getValue(rangedValue, 0);
     const rangeEnd = getValue(rangedValue, 1);
@@ -53,12 +55,12 @@ export default function useCellClassName<DateType>({
     const isHoverStart = isSameCell(hoverStart, currentDate);
     const isHoverEnd = isSameCell(hoverEnd, currentDate);
 
-    const isHoverEdgeStart =
-      (isRangeHovered || isHoverEnd) &&
-      (!isInView(prevDate) || isRangeEnd(prevDate));
-    const isHoverEdgeEnd =
-      (isRangeHovered || isHoverStart) &&
-      (!isInView(nextDate) || isRangeStart(nextDate));
+    // const isHoverEdgeStart =
+    //   (isRangeHovered || isHoverEnd) &&
+    //   (!isInView(prevDate) || isRangeEnd(prevDate));
+    // const isHoverEdgeEnd =
+    //   (isRangeHovered || isHoverStart) &&
+    //   (!isInView(nextDate) || isRangeStart(nextDate));
 
     return {
       // In view
@@ -71,33 +73,33 @@ export default function useCellClassName<DateType>({
         rangeEnd,
         currentDate,
       ),
-      [`${cellPrefixCls}-range-start`]: isRangeStart(currentDate),
-      [`${cellPrefixCls}-range-end`]: isRangeEnd(currentDate),
-      [`${cellPrefixCls}-range-start-single`]:
-        isRangeStart(currentDate) && !rangeEnd,
-      [`${cellPrefixCls}-range-end-single`]:
-        isRangeEnd(currentDate) && !rangeStart,
-      [`${cellPrefixCls}-range-start-near-hover`]:
-        isRangeStart(currentDate) &&
-        (isSameCell(prevDate, hoverStart) ||
-          isInRange(generateConfig, hoverStart, hoverEnd, prevDate)),
-      [`${cellPrefixCls}-range-end-near-hover`]:
-        isRangeEnd(currentDate) &&
-        (isSameCell(nextDate, hoverEnd) ||
-          isInRange(generateConfig, hoverStart, hoverEnd, nextDate)),
+      [`${cellPrefixCls}-range-start`]: isRangeStart(currentDate)&& showHover,
+      [`${cellPrefixCls}-range-end`]: isRangeEnd(currentDate)&& showHover,
+      // [`${cellPrefixCls}-range-start-single`]:
+      //   isRangeStart(currentDate) && !rangeEnd,
+      // [`${cellPrefixCls}-range-end-single`]:
+      //   isRangeEnd(currentDate) && !rangeStart,
+      // [`${cellPrefixCls}-range-start-near-hover`]:
+      //   isRangeStart(currentDate) &&
+      //   (isSameCell(prevDate, hoverStart) ||
+      //     isInRange(generateConfig, hoverStart, hoverEnd, prevDate)),
+      // [`${cellPrefixCls}-range-end-near-hover`]:
+      //   isRangeEnd(currentDate) &&
+      //   (isSameCell(nextDate, hoverEnd) ||
+      //     isInRange(generateConfig, hoverStart, hoverEnd, nextDate)),
 
       // Range Hover
-      [`${cellPrefixCls}-range-hover`]: isRangeHovered,
-      [`${cellPrefixCls}-range-hover-start`]: isHoverStart,
-      [`${cellPrefixCls}-range-hover-end`]: isHoverEnd,
+      [`${cellPrefixCls}-range-hover`]: isRangeHovered && showHover,
+      [`${cellPrefixCls}-range-hover-start`]: isHoverStart && showHover,
+      [`${cellPrefixCls}-range-hover-end`]: isHoverEnd && showHover,
 
-      // Range Edge
-      [`${cellPrefixCls}-range-hover-edge-start`]: isHoverEdgeStart,
-      [`${cellPrefixCls}-range-hover-edge-end`]: isHoverEdgeEnd,
-      [`${cellPrefixCls}-range-hover-edge-start-near-range`]:
-        isHoverEdgeStart && isSameCell(prevDate, rangeEnd),
-      [`${cellPrefixCls}-range-hover-edge-end-near-range`]:
-        isHoverEdgeEnd && isSameCell(nextDate, rangeStart),
+      // // Range Edge
+      // [`${cellPrefixCls}-range-hover-edge-start`]: isHoverEdgeStart,
+      // [`${cellPrefixCls}-range-hover-edge-end`]: isHoverEdgeEnd,
+      // [`${cellPrefixCls}-range-hover-edge-start-near-range`]:
+      //   isHoverEdgeStart && isSameCell(prevDate, rangeEnd),
+      // [`${cellPrefixCls}-range-hover-edge-end-near-range`]:
+      //   isHoverEdgeEnd && isSameCell(nextDate, rangeStart),
 
       // Others
       [`${cellPrefixCls}-today`]: isSameCell(today, currentDate),

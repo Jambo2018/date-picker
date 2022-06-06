@@ -34,16 +34,8 @@ export type DateBodyProps<DateType> = {
 } & DateBodyPassProps<DateType>;
 
 function DateBody<DateType>(props: DateBodyProps<DateType>) {
-  const {
-    prefixCls,
-    generateConfig,
-    prefixColumn,
-    locale,
-    rowCount,
-    viewDate,
-    value,
-    dateRender,
-  } = props;
+  const { prefixCls, generateConfig, prefixColumn, locale, rowCount, viewDate, value, dateRender } =
+    props;
 
   const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
 
@@ -76,8 +68,9 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     rangedValue: prefixColumn ? null : rangedValue,
     hoverRangedValue: prefixColumn ? null : hoverRangedValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
-    isInView: date => isSameMonth(generateConfig, date, viewDate),
+    isInView: (date) => isSameMonth(generateConfig, date, viewDate),
     offsetCell: (date, offset) => generateConfig.addDate(date, offset),
+    showHover:true,
   });
 
   const getCellNode = dateRender ? (date: DateType) => dateRender(date, today) : undefined;
@@ -92,7 +85,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
       getCellText={generateConfig.getDate}
       getCellClassName={getCellClassName}
       getCellDate={generateConfig.addDate}
-      titleCell={date =>
+      titleCell={(date) =>
         formatValue(date, {
           locale,
           format: 'YYYY-MM-DD',
