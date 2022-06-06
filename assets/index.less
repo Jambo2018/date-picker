@@ -9,7 +9,16 @@
 .week-header {
   width: 100%;
   height: 36px;
-  border-bottom: 1px solid @--border-color;
+  position: relative;
+  &::after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid @--border-color;
+  }
 }
 
 .week-day {
@@ -44,7 +53,7 @@
     font-family: Poppins;
   }
   &-year-btn,
-  &-month-btn{
+  &-month-btn {
     cursor: pointer;
   }
   &-rtl {
@@ -218,7 +227,7 @@
   &-decade-panel,
   &-year-panel,
   &-month-panel,
-  &-date-panel     {
+  &-date-panel {
     padding: 0 16px;
     .@{prefix-cls}-cell-inner {
       display: flex;

@@ -912,7 +912,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
 
   function renderPanels() {
-    let panels: React.ReactNode;
+    // let panels: React.ReactNode;
+    const panels: React.ReactNode = renderPanel();
+
     const extraNode = getExtraFooter(
       prefixCls,
       mergedModes[mergedActivePickerIndex],
@@ -939,46 +941,46 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       },
     });
 
-    if (picker !== 'time' && !showTime) {
-      const viewDate = getViewDate(mergedActivePickerIndex);
-      const nextViewDate = getClosingViewDate(viewDate, picker, generateConfig);
-      const currentMode = mergedModes[mergedActivePickerIndex];
+    // if (picker !== 'time' && !showTime) {
+    //   const viewDate = getViewDate(mergedActivePickerIndex);
+    //   const nextViewDate = getClosingViewDate(viewDate, picker, generateConfig);
+    //   const currentMode = mergedModes[mergedActivePickerIndex];
 
-      const showDoublePanel = currentMode === picker;
-      const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
-        pickerValue: viewDate,
-        onPickerValueChange: (newViewDate) => {
-          setViewDate(newViewDate, mergedActivePickerIndex);
-        },
-      });
-      const rightPanel = renderPanel('right', {
-        pickerValue: nextViewDate,
-        onPickerValueChange: (newViewDate) => {
-          setViewDate(
-            getClosingViewDate(newViewDate, picker, generateConfig, -1),
-            mergedActivePickerIndex,
-          );
-        },
-      });
+    //   const showDoublePanel = currentMode === picker;
+    //   const leftPanel = renderPanel(showDoublePanel ? 'left' : false, {
+    //     pickerValue: viewDate,
+    //     onPickerValueChange: (newViewDate) => {
+    //       setViewDate(newViewDate, mergedActivePickerIndex);
+    //     },
+    //   });
+    //   const rightPanel = renderPanel('right', {
+    //     pickerValue: nextViewDate,
+    //     onPickerValueChange: (newViewDate) => {
+    //       setViewDate(
+    //         getClosingViewDate(newViewDate, picker, generateConfig, -1),
+    //         mergedActivePickerIndex,
+    //       );
+    //     },
+    //   });
 
-      if (direction === 'rtl') {
-        panels = (
-          <>
-            {rightPanel}
-            {showDoublePanel && leftPanel}
-          </>
-        );
-      } else {
-        panels = (
-          <>
-            {leftPanel}
-            {showDoublePanel && rightPanel}
-          </>
-        );
-      }
-    } else {
-      panels = renderPanel();
-    }
+    //   if (direction === 'rtl') {
+    //     panels = (
+    //       <>
+    //         {rightPanel}
+    //         {showDoublePanel && leftPanel}
+    //       </>
+    //     );
+    //   } else {
+    //     panels = (
+    //       <>
+    //         {leftPanel}
+    //         {showDoublePanel && rightPanel}
+    //       </>
+    //     );
+    //   }
+    // } else {
+    //   panels = renderPanel();
+    // }
 
     let mergedNodes: React.ReactNode = (
       <>
