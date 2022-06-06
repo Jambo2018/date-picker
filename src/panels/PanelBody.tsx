@@ -123,9 +123,13 @@ export default function PanelBody<DateType>({
     );
   }
 
+  const cellSpacing = React.useMemo(() => {
+    if (colNum === 3) return (40 * 7 - 90 * 3) / 2;
+    return 0;
+  }, [colNum]);
   return (
     <div className={`${prefixCls}-body`}>
-      <table className={`${prefixCls}-content`} border="0" cellspacing="0" cellpadding="0">
+      <table className={`${prefixCls}-content`} cellSpacing={cellSpacing} cellPadding={0}>
         {headerCells && (
           <thead className="week-header">
             <tr className="week-day">{headerCells}</tr>

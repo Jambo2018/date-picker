@@ -35,9 +35,9 @@ function YearHeader<DateType>(props: YearHeaderProps<DateType>) {
       onSuperPrev={onPrevDecade}
       onSuperNext={onNextDecade}
     >
-      <button type="button" onClick={onDecadeClick} className={`${prefixCls}-decade-btn`}>
+      <span onClick={onDecadeClick} className={`${prefixCls}-decade-btn`}>
         {startYear}-{endYear}
-      </button>
+      </span>
     </Header>
   );
 }

@@ -36,12 +36,17 @@
   }
 }
 
-
-
-
 .@{prefix-cls} {
   display: inline-flex;
-
+  &-header-view {
+    color: @--text-color;
+    font-size: 16px;
+    font-family: Poppins;
+  }
+  &-year-btn,
+  &-month-btn{
+    cursor: pointer;
+  }
   &-rtl {
     direction: rtl;
   }
@@ -70,7 +75,7 @@
   }
 
   // ===================== Shared Panel =====================
-  &-decade-panel,
+  // &-decade-panel,
   &-year-panel,
   &-month-panel,
   &-week-panel,
@@ -161,7 +166,6 @@
       background-color: @--option-bg-color;
     }
 
-
     &-range-hover-start::after {
       // border-left: 1px solid green !important;
     }
@@ -173,14 +177,13 @@
       border: 1px solid blue;
     }
 
-    &-range-start{
+    &-range-start {
+      background-color: @--option-bg-color;
       border-radius: 20px 0 0 20px;
-      background-color:@--option-bg-color ;
-
     }
-    &-range-end{
+    &-range-end {
+      background-color: @--option-bg-color;
       border-radius: 0 20px 20px 0;
-      background-color:@--option-bg-color ;
     }
     &-range-start > &-inner,
     &-range-end > &-inner,
@@ -212,10 +215,20 @@
   }
 
   // ================== Year & Month Panel ==================
+  &-decade-panel,
   &-year-panel,
-  &-month-panel {
+  &-month-panel,
+  &-date-panel     {
+    padding: 0 16px;
     .@{prefix-cls}-cell-inner {
-      width: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 90px;
+      height: 40px;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: Poppins;
     }
   }
 
@@ -254,16 +267,8 @@
 
   // ====================== Date Panel ======================
   &-date-panel {
-    padding: 0 16px;
     .@{prefix-cls}-cell-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       width: 40px;
-      height: 40px;
-      font-weight: 700;
-      font-size: 14px;
-      font-family: Poppins;
     }
   }
 

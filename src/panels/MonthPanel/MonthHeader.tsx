@@ -40,13 +40,13 @@ function MonthHeader<DateType>(props: MonthHeaderProps<DateType>) {
       onSuperPrev={onPrevYear}
       onSuperNext={onNextYear}
     >
-      <button type="button" onClick={onYearClick} className={`${prefixCls}-year-btn`}>
+      <span onClick={onYearClick} className={`${prefixCls}-year-btn`}>
         {formatValue(viewDate, {
           locale,
           format: locale.yearFormat,
           generateConfig,
         })}
-      </button>
+      </span>
     </Header>
   );
 }
