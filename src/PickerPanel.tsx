@@ -35,9 +35,9 @@ import type { DateRender } from './panels/DatePanel/DateBody';
 import { PickerModeMap } from './utils/uiUtil';
 import type { MonthCellRender } from './panels/MonthPanel/MonthBody';
 import RangeContext from './RangeContext';
-import getExtraFooter from './utils/getExtraFooter';
-import getRanges from './utils/getRanges';
-import { getLowerBoundTime, setDateTime, setTime } from './utils/timeUtil';
+// import getExtraFooter from './utils/getExtraFooter';
+// import getRanges from './utils/getRanges';
+import { setDateTime } from './utils/timeUtil';
 
 export type PickerPanelSharedProps<DateType> = {
   prefixCls?: string;
@@ -122,7 +122,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     prefixCls = 'rc-picker',
     className,
     style,
-    locale,
+    // locale,
     generateConfig,
     value,
     defaultValue,
@@ -132,25 +132,27 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     mode,
     picker = 'date',
     tabIndex = 0,
-    showNow,
+    // showNow,
     showTime,
-    showToday,
-    renderExtraFooter,
+    // showToday,
+    // renderExtraFooter,
     hideHeader,
     onSelect,
     onChange,
     onPanelChange,
     onMouseDown,
     onPickerValueChange,
-    onOk,
-    components,
+    // onOk,
+    // components,
     direction,
     hourStep = 1,
     minuteStep = 1,
     secondStep = 1,
   } = props as MergedPickerPanelProps<DateType>;
 
-  const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
+  // const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
+
+  const [dateView, setDate] = React.useState<DateType>(value);
 
   const isHourStepValid = 24 % hourStep === 0;
   const isMinuteStepValid = 60 % minuteStep === 0;
@@ -177,7 +179,7 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     operationRef,
     panelRef: panelDivRef,
     onSelect: onContextSelect,
-    hideRanges,
+    // hideRanges,
     defaultOpenValue,
   } = panelContext;
 
@@ -458,9 +460,9 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         panelNode = (
           <DatePanel<DateType>
             {...pickerProps}
+            value={dateView}
             onSelect={(date, type) => {
-              setViewDate(date);
-              triggerSelect(date, type);
+              setDate(date);
             }}
           />
         );
@@ -532,7 +534,15 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   //     </a>
   //   );
   // }
-  console.log('picker', mergedMode);
+
+  const onDateConfirm = () => {
+    setViewDate(dateView);
+    triggerSelect(dateView, 'mouse');
+  };
+  const onCancel=()=>{
+    setViewDate(value);
+    triggerSelect(value, 'mouse');
+  }
   return (
     <PanelContext.Provider
       value={{
@@ -560,8 +570,12 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         {panelNode}
         {mergedMode === 'date' && (
           <div className={classNames(`${prefixCls}-panel-filter`)}>
-            <button className={classNames(`cancel-btn`)}>Cancel</button>
-            <button className={classNames(`confirm-btn`)}>Filter</button>
+            <button className={classNames(`cancel-btn`)} onClick={onCancel}>
+              Cancel
+            </button>
+            <button className={classNames(`confirm-btn`)} onClick={onDateConfirm}>
+              Filter
+            </button>
           </div>
         )}
       </div>
