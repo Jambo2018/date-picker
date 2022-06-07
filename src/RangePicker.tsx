@@ -789,7 +789,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   });
 
   const disabledConfirm = React.useMemo(() => {
-    if (rangeValues === null) return false;
+    if (rangeValues === null) return true;
     const realValues = rangeValues.filter((i) => i);
     return realValues.length !== 2;
   }, [rangeValues]);
@@ -903,7 +903,6 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     );
   }
 
-  console.log("defaultValue",defaultValue,value)
   let arrowLeft: number = 0;
   let panelLeft: number = 0;
   if (
