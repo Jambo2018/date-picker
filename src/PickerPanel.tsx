@@ -539,10 +539,11 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     setViewDate(dateView);
     triggerSelect(dateView, 'mouse');
   };
-  const onCancel=()=>{
+  const onCancel = () => {
     setViewDate(value);
     triggerSelect(value, 'mouse');
-  }
+  };
+  console.log(viewDate, value);
   return (
     <PanelContext.Provider
       value={{
@@ -573,7 +574,11 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
             <button className={classNames(`cancel-btn`)} onClick={onCancel}>
               Cancel
             </button>
-            <button className={classNames(`confirm-btn`)} onClick={onDateConfirm}>
+            <button
+              disabled={!dateView}
+              className={classNames(dateView ? `confirm-btn` : 'disabled-btn')}
+              onClick={onDateConfirm}
+            >
               Filter
             </button>
           </div>
