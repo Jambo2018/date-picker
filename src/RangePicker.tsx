@@ -21,6 +21,7 @@ import {
   isSameQuarter,
   formatValue,
   parseValue,
+  isAfter,
 } from './utils/dateUtil';
 import useValueTexts from './hooks/useValueTexts';
 import useTextValueMapping from './hooks/useTextValueMapping';
@@ -240,7 +241,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const startInputRef = useRef<HTMLInputElement>(null);
   const endInputRef = useRef<HTMLInputElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
-  const [rangeValues, setRangeValues] = useState<null | DateType[]>(value||defaultValue);
+  const [rangeValues, setRangeValues] = useState<null | DateType[]>(value || defaultValue);
   // ============================ Warning ============================
   if (process.env.NODE_ENV !== 'production') {
     legacyPropsWarning(props);
@@ -319,6 +320,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     }
   };
 
+  // console.log(openRecordsRef.current);
   // ========================= Disable Date ==========================
   const [disabledStartDate, disabledEndDate] = useRangeDisabled(
     {
@@ -329,8 +331,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       disabledDate,
       generateConfig,
     },
-    openRecordsRef.current[1],
-    openRecordsRef.current[0],
+    // openRecordsRef.current[1],
+    // openRecordsRef.current[0],
+    false,
+    false,
   );
 
   // ============================= Open ==============================
@@ -402,7 +406,20 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   }
 
   function triggerChange(newValue: RangeValue<DateType>, sourceIndex: 0 | 1) {
-    console.log(newValue);
+    if (
+      newValue &&
+      newValue[0] &&
+      newValue[1] &&
+      isAfter(generateConfig, newValue[0], newValue[1])
+    ) {
+      // console.log('true');
+      // const tmp = newValue[1];
+      // newValue[1] = newValue[0];
+      // newValue[0] = tmp;
+      triggerChange([newValue[1],newValue[0]], sourceIndex);
+      return;
+    }
+
     let values = newValue;
     let startValue = getValue(values, 0);
     let endValue = getValue(values, 1);
@@ -766,28 +783,6 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     };
   }
 
-  // ============================ Ranges =============================
-  const rangeLabels = Object.keys(ranges || {});
-
-  const rangeList = rangeLabels.map((label) => {
-    const range = ranges![label];
-    const newValues = typeof range === 'function' ? range() : range;
-
-    return {
-      label,
-      onClick: () => {
-        triggerChange(newValues, null);
-        triggerOpen(false, mergedActivePickerIndex);
-      },
-      onMouseEnter: () => {
-        setRangeHoverValue(newValues);
-      },
-      onMouseLeave: () => {
-        setRangeHoverValue(null);
-      },
-    };
-  });
-
   const disabledConfirm = React.useMemo(() => {
     if (rangeValues === null) return true;
     const realValues = rangeValues.filter((i) => i);
@@ -828,15 +823,15 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         });
     }
 
-    const onDateConfirm=()=>{
-      triggerOpen(false,0);
-      triggerOpen(false,1);
-      onChange(rangeValues as [DateType,DateType], ['', '']);
-    }
-    const onCancel=()=>{
-      triggerOpen(false,0);
-      triggerOpen(false,1);
-    }
+    const onDateConfirm = () => {
+      triggerOpen(false, 0);
+      triggerOpen(false, 1);
+      onChange(rangeValues as [DateType, DateType], ['', '']);
+    };
+    const onCancel = () => {
+      triggerOpen(false, 0);
+      triggerOpen(false, 1);
+    };
     return (
       <RangeContext.Provider
         value={{
@@ -858,7 +853,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           generateConfig={generateConfig}
           style={undefined}
           direction={direction}
-          disabledDate={mergedActivePickerIndex === 0 ? disabledStartDate : disabledEndDate}
+          // disabledDate={mergedActivePickerIndex === 0 ? disabledStartDate : disabledEndDate}
           disabledTime={(date) => {
             if (disabledTime) {
               return disabledTime(date, mergedActivePickerIndex === 0 ? 'start' : 'end');

@@ -319,3 +319,8 @@ export function getCellDateDisabled<DateType>({
     }
   }
 }
+
+
+export function isAfter<DateType>(generateConfig: GenerateConfig<DateType>,date1: NullableDateType<DateType>, date2: NullableDateType<DateType>): boolean {
+  return generateConfig.isAfter(date1, date2);
+}
