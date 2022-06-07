@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { OnSelect, PanelMode } from './interface';
+import { NullableDateType, OnSelect, PanelMode } from './interface';
 
 export type ContextOperationRefProps = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLElement>) => boolean;

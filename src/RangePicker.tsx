@@ -21,7 +21,6 @@ import {
   isSameQuarter,
   formatValue,
   parseValue,
-  isAfter,
 } from './utils/dateUtil';
 import useValueTexts from './hooks/useValueTexts';
 import useTextValueMapping from './hooks/useTextValueMapping';
@@ -241,7 +240,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const startInputRef = useRef<HTMLInputElement>(null);
   const endInputRef = useRef<HTMLInputElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
-  const [rangeValues, setRangeValues] = useState<null | DateType[]>(value || defaultValue);
+  // const [rangeValues, setRangeValues] = useState<null | DateType[]>(value || defaultValue);
+  const rangeValuesRef = useRef<null | DateType[]>(value || defaultValue);
   // ============================ Warning ============================
   if (process.env.NODE_ENV !== 'production') {
     legacyPropsWarning(props);
@@ -406,115 +406,142 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   }
 
   function triggerChange(newValue: RangeValue<DateType>, sourceIndex: 0 | 1) {
-    if (
-      newValue &&
-      newValue[0] &&
-      newValue[1] &&
-      isAfter(generateConfig, newValue[0], newValue[1])
-    ) {
-      // console.log('true');
-      // const tmp = newValue[1];
-      // newValue[1] = newValue[0];
-      // newValue[0] = tmp;
-      triggerChange([newValue[1],newValue[0]], sourceIndex);
+    // if (
+    //   newValue &&
+    //   newValue[0] &&
+    //   newValue[1] &&
+    //   rangeValuesRef?.current &&
+    //   rangeValuesRef.current[0] &&
+    //   rangeValuesRef.current[1]
+    // ) {
+    //   if (rangeValuesRef.current[1] !== newValue[1]) {
+    //     rangeValuesRef.current[0]=newValue[1];
+    //     // setSelectedValue([newValue[1], null]);
+    //     // triggerOpenAndFocus(1);
+    //     // triggerChange([newValue[1], null], null);
+    //     triggerChange([newValue[1], null], 0);
+    //     return;
+    //   }
+    // }
+    if (!rangeValuesRef) return;
+    if (newValue === null) {
+      setSelectedValue([null, null]);
+      setInnerValue([null, null]);
+      rangeValuesRef.current = [null, null];
       return;
     }
+    if (rangeValuesRef.current[0] && rangeValuesRef.current[1]) {
+      setSelectedValue([newValue[0], null]);
+      setInnerValue([newValue[0], null]);
+      rangeValuesRef.current = [newValue[0], null];
+    } else if (rangeValuesRef.current[0]) {
+      setSelectedValue([rangeValuesRef.current[0], newValue[0]]);
+      setInnerValue([rangeValuesRef.current[0], newValue[0]]);
+      rangeValuesRef.current = [rangeValuesRef.current[0], newValue[0]];
+    } else {
+      setSelectedValue([newValue[0], null]);
+      setInnerValue([newValue[0], null]);
+      rangeValuesRef.current = [newValue[0], null];
+    }
+    return;
+    console.log(newValue, rangeValuesRef.current);
 
-    let values = newValue;
-    let startValue = getValue(values, 0);
-    let endValue = getValue(values, 1);
-    setRangeValues(values);
+    const values = newValue;
+    const startValue = getValue(values, 0);
+    const endValue = getValue(values, 1);
+    // setRangeValues(values);
+    rangeValuesRef.current = values;
 
     // >>>>> Format start & end values
-    if (startValue && endValue && generateConfig.isAfter(startValue, endValue)) {
-      if (
-        // WeekPicker only compare week
-        (picker === 'week' && !isSameWeek(generateConfig, locale.locale, startValue, endValue)) ||
-        // QuotaPicker only compare week
-        (picker === 'quarter' && !isSameQuarter(generateConfig, startValue, endValue)) ||
-        // Other non-TimePicker compare date
-        (picker !== 'week' &&
-          picker !== 'quarter' &&
-          picker !== 'time' &&
-          !isSameDate(generateConfig, startValue, endValue))
-      ) {
-        // Clean up end date when start date is after end date
-        if (sourceIndex === 0) {
-          values = [startValue, null];
-          endValue = null;
-        } else {
-          startValue = null;
-          values = [null, endValue];
-        }
+    // if (startValue && endValue && generateConfig.isAfter(startValue, endValue)) {
+    //   if (
+    //     // WeekPicker only compare week
+    //     (picker === 'week' && !isSameWeek(generateConfig, locale.locale, startValue, endValue)) ||
+    //     // QuotaPicker only compare week
+    //     (picker === 'quarter' && !isSameQuarter(generateConfig, startValue, endValue)) ||
+    //     // Other non-TimePicker compare date
+    //     (picker !== 'week' &&
+    //       picker !== 'quarter' &&
+    //       picker !== 'time' &&
+    //       !isSameDate(generateConfig, startValue, endValue))
+    //   ) {
+    //     // Clean up end date when start date is after end date
+    //     if (sourceIndex === 0) {
+    //       values = [startValue, null];
+    //       endValue = null;
+    //     } else {
+    //       startValue = null;
+    //       values = [null, endValue];
+    //     }
 
-        // Clean up cache since invalidate
-        openRecordsRef.current = {
-          [sourceIndex]: true,
-        };
-      } else if (picker !== 'time' || order !== false) {
-        // Reorder when in same date
-        values = reorderValues(values, generateConfig);
-      }
-    }
+    //     // Clean up cache since invalidate
+    //     openRecordsRef.current = {
+    //       [sourceIndex]: true,
+    //     };
+    //   } else if (picker !== 'time' || order !== false) {
+    //     // Reorder when in same date
+    //     values = reorderValues(values, generateConfig);
+    //   }
+    // }
 
-    setSelectedValue(values);
+    // setSelectedValue(values);
 
-    const startStr =
-      values && values[0]
-        ? formatValue(values[0], { generateConfig, locale, format: formatList[0] })
-        : '';
-    const endStr =
-      values && values[1]
-        ? formatValue(values[1], { generateConfig, locale, format: formatList[0] })
-        : '';
+    // // const startStr =
+    // //   values && values[0]
+    // //     ? formatValue(values[0], { generateConfig, locale, format: formatList[0] })
+    // //     : '';
+    // // const endStr =
+    // //   values && values[1]
+    // //     ? formatValue(values[1], { generateConfig, locale, format: formatList[0] })
+    // //     : '';
 
-    if (onCalendarChange) {
-      const info: RangeInfo = { range: sourceIndex === 0 ? 'start' : 'end' };
+    // // if (onCalendarChange) {
+    // //   const info: RangeInfo = { range: sourceIndex === 0 ? 'start' : 'end' };
 
-      onCalendarChange(values, [startStr, endStr], info);
-    }
+    // //   onCalendarChange(values, [startStr, endStr], info);
+    // // }
 
-    // >>>>> Trigger `onChange` event
-    const canStartValueTrigger = canValueTrigger(startValue, 0, mergedDisabled, allowEmpty);
-    const canEndValueTrigger = canValueTrigger(endValue, 1, mergedDisabled, allowEmpty);
+    // // >>>>> Trigger `onChange` event
+    // const canStartValueTrigger = canValueTrigger(startValue, 0, mergedDisabled, allowEmpty);
+    // const canEndValueTrigger = canValueTrigger(endValue, 1, mergedDisabled, allowEmpty);
 
-    const canTrigger = values === null || (canStartValueTrigger && canEndValueTrigger);
+    // const canTrigger = values === null || (canStartValueTrigger && canEndValueTrigger);
 
-    if (canTrigger) {
-      // Trigger onChange only when value is validate
-      setInnerValue(values);
+    // if (canTrigger) {
+    //   // Trigger onChange only when value is validate
+    //   setInnerValue(values);
 
-      if (
-        onChange &&
-        (!isEqual(generateConfig, getValue(mergedValue, 0), startValue) ||
-          !isEqual(generateConfig, getValue(mergedValue, 1), endValue))
-      ) {
-        // onChange(values, [startStr, endStr]);
-        // setRangeValues(values);
-      }
-    }
+    //   // if (
+    //   //   onChange &&
+    //   //   (!isEqual(generateConfig, getValue(mergedValue, 0), startValue) ||
+    //   //     !isEqual(generateConfig, getValue(mergedValue, 1), endValue))
+    //   // ) {
+    //   //   onChange(values, [startStr, endStr]);
+    //   //   setRangeValues(values);
+    //   // }
+    // }
 
     // >>>>> Open picker when
 
     // Always open another picker if possible
-    let nextOpenIndex: 0 | 1 = null;
-    if (sourceIndex === 0 && !mergedDisabled[1]) {
-      nextOpenIndex = 1;
-    } else if (sourceIndex === 1 && !mergedDisabled[0]) {
-      nextOpenIndex = 0;
-    }
+    // let nextOpenIndex: 0 | 1 = null;
+    // if (sourceIndex === 0 && !mergedDisabled[1]) {
+    //   nextOpenIndex = 1;
+    // } else if (sourceIndex === 1 && !mergedDisabled[0]) {
+    //   nextOpenIndex = 0;
+    // }
 
-    if (
-      nextOpenIndex !== null &&
-      nextOpenIndex !== mergedActivePickerIndex &&
-      (!openRecordsRef.current[nextOpenIndex] || !getValue(values, nextOpenIndex)) &&
-      getValue(values, sourceIndex)
-    ) {
-      // Delay to focus to avoid input blur trigger expired selectedValues
-      triggerOpenAndFocus(nextOpenIndex);
-    } else {
-      // triggerOpen(false, sourceIndex);
-    }
+    // if (
+    //   nextOpenIndex !== null &&
+    //   nextOpenIndex !== mergedActivePickerIndex &&
+    //   (!openRecordsRef.current[nextOpenIndex] || !getValue(values, nextOpenIndex)) &&
+    //   getValue(values, sourceIndex)
+    // ) {
+    //   // Delay to focus to avoid input blur trigger expired selectedValues
+    //   triggerOpenAndFocus(nextOpenIndex);
+    // } else {
+    //   // triggerOpen(false, sourceIndex);
+    // }
   }
 
   const forwardKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -749,6 +776,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     setSelectedValue(mergedValue);
   }, [startStr, endStr]);
 
+  // useEffect(()=>{
+  //   console.log(startHoverValue,"&&&",startText);
+  // },[startHoverValue,startText])
+
   // ============================ Warning ============================
   if (process.env.NODE_ENV !== 'production') {
     if (
@@ -784,10 +815,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   }
 
   const disabledConfirm = React.useMemo(() => {
-    if (rangeValues === null) return true;
-    const realValues = rangeValues.filter((i) => i);
+    if (rangeValuesRef.current === null) return true;
+    const realValues = rangeValuesRef.current.filter((i) => i);
     return realValues.length !== 2;
-  }, [rangeValues]);
+  }, [rangeValuesRef.current]);
 
   // ============================= Panel =============================
   function renderPanel(
@@ -826,7 +857,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     const onDateConfirm = () => {
       triggerOpen(false, 0);
       triggerOpen(false, 1);
-      onChange(rangeValues as [DateType, DateType], ['', '']);
+      onChange(rangeValuesRef.current as [DateType, DateType], ['', '']);
     };
     const onCancel = () => {
       triggerOpen(false, 0);
@@ -838,7 +869,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
           inRange: true,
           panelPosition,
           rangedValue: rangeHoverValue || selectedValue,
-          hoverRangedValue: panelHoverRangedValue,
+          // hoverRangedValue: panelHoverRangedValue,
+          hoverValue: hoverRangedValue ? hoverRangedValue[0] : null,
         }}
       >
         <PickerPanel<DateType>
@@ -1009,7 +1041,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
     if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
       // triggerChange will also update selected values
-      triggerChange(values, mergedActivePickerIndex);
+      // triggerChange(values, mergedActivePickerIndex);
+      triggerChange([date, null], mergedActivePickerIndex);
       // clear hover value style
       if (mergedActivePickerIndex === 0) {
         onStartLeave();

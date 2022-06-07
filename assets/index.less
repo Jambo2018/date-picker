@@ -25,7 +25,7 @@
   }
 }
 .head-body-span {
-  height:8px;
+  height: 8px;
 }
 .week-day {
   flex: 1 1;
@@ -117,9 +117,9 @@
         }
       }
       .disabled-btn {
+        color: #fff;
         background-color: @--main-color-disabled!important;
         border: none !important;
-        color: #FFF;
         cursor: default;
       }
       .cancel-btn {
@@ -196,7 +196,9 @@
       outline: none;
       cursor: pointer;
       // transition: background 0.3s, border 0.3s;
+    }
 
+    &-date-hover {
       &:hover {
         background: @--option-bg-color;
         border-radius: 20px;
@@ -206,23 +208,27 @@
     &-in-view {
       color: #333;
     }
+    &-hover {
+      background: @--option-bg-color;
+      border-radius: 20px;
+    }
 
     &-in-range > &-inner {
       background-color: @--option-bg-color;
     }
-    &-range-hover-start {
-      background-color: @--option-bg-color;
-      border-radius: 20px 0 0 20px;
-      // border-radius: 20px;
-    }
-    &-range-hover-end {
-      background-color: @--option-bg-color;
-      border-radius: 0 20px 20px 0;
-      // border-radius: 20px;
-    }
-    &-range-hover {
-      background-color: @--option-bg-color;
-    }
+    // &-range-hover-start {
+    //   background-color: @--option-bg-color;
+    //   border-radius: 20px 0 0 20px;
+    //   // border-radius: 20px;
+    // }
+    // &-range-hover-end {
+    //   background-color: @--option-bg-color;
+    //   border-radius: 0 20px 20px 0;
+    //   // border-radius: 20px;
+    // }
+    // &-range-hover {
+    //   background-color: @--option-bg-color;
+    // }
 
     // &-range-hover-start::after {
     //   // border-left: 1px solid green !important;

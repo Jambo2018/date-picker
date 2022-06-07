@@ -10,6 +10,7 @@ export type RangeContextProps = {
   hoverRangedValue?: RangeValue<any>;
   inRange?: boolean;
   panelPosition?: 'left' | 'right' | false;
+  hoverValue?: NullableDateType<any>;
 };
 
 const RangeContext = React.createContext<RangeContextProps>({});

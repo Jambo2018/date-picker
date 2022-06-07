@@ -37,7 +37,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
   const { prefixCls, generateConfig, prefixColumn, locale, rowCount, viewDate, value, dateRender } =
     props;
 
-  const { rangedValue, hoverRangedValue } = React.useContext(RangeContext);
+  const { rangedValue, hoverValue } = React.useContext(RangeContext);
 
   const baseDate = getWeekStartDate(locale.locale, generateConfig, viewDate);
   const cellPrefixCls = `${prefixCls}-cell`;
@@ -66,11 +66,11 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     value,
     generateConfig,
     rangedValue: prefixColumn ? null : rangedValue,
-    hoverRangedValue: prefixColumn ? null : hoverRangedValue,
+    hoverValue: prefixColumn ? null : hoverValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
     isInView: (date) => isSameMonth(generateConfig, date, viewDate),
     offsetCell: (date, offset) => generateConfig.addDate(date, offset),
-    showHover:true,
+    showHover: true,
   });
 
   const getCellNode = dateRender ? (date: DateType) => dateRender(date, today) : undefined;

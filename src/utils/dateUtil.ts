@@ -137,24 +137,47 @@ export function isEqual<DateType>(
   return isSameDate(generateConfig, value1, value2) && isSameTime(generateConfig, value1, value2);
 }
 
-/** Between in date but not equal of date */
 export function isInRange<DateType>(
   generateConfig: GenerateConfig<DateType>,
   startDate: NullableDateType<DateType>,
   endDate: NullableDateType<DateType>,
+  hoverDate: NullableDateType<DateType>,
   current: NullableDateType<DateType>,
 ) {
-  if (!startDate || !endDate || !current) {
+  // console.log(startDate,hoverDate)
+  if (!startDate || (!hoverDate && !endDate)) {
     return false;
   }
 
   return (
-    !isSameDate(generateConfig, startDate, current) &&
-    !isSameDate(generateConfig, endDate, current) &&
-    generateConfig.isAfter(current, startDate) &&
-    generateConfig.isAfter(endDate, current)
+    (endDate &&
+      generateConfig.isAfter(current, startDate) &&
+      generateConfig.isAfter(endDate, current)) || (!endDate &&
+        (generateConfig.isAfter(current, startDate) ===
+          generateConfig.isAfter(hoverDate, current)))
   );
 }
+
+
+
+/** Between in date but not equal of date */
+// export function isInRange<DateType>(
+//   generateConfig: GenerateConfig<DateType>,
+//   startDate: NullableDateType<DateType>,
+//   endDate: NullableDateType<DateType>,
+//   current: NullableDateType<DateType>,
+// ) {
+//   if (!startDate || !endDate || !current) {
+//     return false;
+//   }
+
+//   return (
+//     !isSameDate(generateConfig, startDate, current) &&
+//     !isSameDate(generateConfig, endDate, current) &&
+//     generateConfig.isAfter(current, startDate) &&
+//     generateConfig.isAfter(endDate, current)
+//   );
+// }
 
 export function getWeekStartDate<DateType>(
   locale: string,
@@ -318,9 +341,4 @@ export function getCellDateDisabled<DateType>({
       return getDisabledFromRange('year', startYear, endYear);
     }
   }
-}
-
-
-export function isAfter<DateType>(generateConfig: GenerateConfig<DateType>,date1: NullableDateType<DateType>, date2: NullableDateType<DateType>): boolean {
-  return generateConfig.isAfter(date1, date2);
 }
