@@ -13,7 +13,7 @@ export default function useCellClassName<DateType>({
   // offsetCell,
   today,
   value,
-  showHover,
+  showHover=false,
 }: {
   cellPrefixCls: string;
   generateConfig: GenerateConfig<DateType>;
@@ -72,7 +72,7 @@ export default function useCellClassName<DateType>({
         rangeStart,
         rangeEnd,
         currentDate,
-      ),
+      )&&showHover,
       [`${cellPrefixCls}-range-start`]: isRangeStart(currentDate)&& showHover,
       [`${cellPrefixCls}-range-end`]: isRangeEnd(currentDate)&& showHover,
       // [`${cellPrefixCls}-range-start-single`]:

@@ -24,6 +24,7 @@ export default () => {
             generateConfig={momentGenerateConfig}
             locale={zhCN}
             allowClear
+            onChange={e=>console.log("date",e)}
             defaultValue={defaultStartValue}
             panelRender={node => (
               <>
@@ -49,6 +50,7 @@ export default () => {
             locale={zhCN}
             allowClear
             defaultValue={defaultValue}
+            onChange={e=>console.log("range",e)}
             panelRender={node => (
               <>
                 <button

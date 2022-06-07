@@ -71,7 +71,7 @@ export type PickerSharedProps<DateType> = {
   inputRender?: (props: React.InputHTMLAttributes<HTMLInputElement>) => React.ReactNode;
 
   // Events
-  onChange?: (value: DateType | null, dateString: string) => void;
+  onChange: (value: DateType | null, dateString: string) => void;
   onOpenChange?: (open: boolean) => void;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
@@ -196,6 +196,8 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
   const inputDivRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
+  const [dateValue, setDateValue] = React.useState<null | DateType>(value || defaultValue);
+
   // Real value
   const [mergedValue, setInnerValue] = useMergedState(null, {
     value,
@@ -250,12 +252,12 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
   const triggerChange = (newValue: DateType | null) => {
     setSelectedValue(newValue);
     setInnerValue(newValue);
-
+    setDateValue(newValue);
     if (onChange && !isEqual(generateConfig, mergedValue, newValue)) {
-      onChange(
-        newValue,
-        newValue ? formatValue(newValue, { generateConfig, locale, format: formatList[0] }) : '',
-      );
+      // onChange(
+      //   newValue,
+      //   newValue ? formatValue(newValue, { generateConfig, locale, format: formatList[0] }) : '',
+      // );
     }
   };
 
@@ -318,7 +320,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
       }
 
       triggerChange(selectedValue);
-      triggerOpen(false);
+      // triggerOpen(false);
       resetText();
       return true;
     },
@@ -394,9 +396,22 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     onChange: null,
   };
 
+  const onDateConfirm = () => {
+    triggerOpen(false);
+    console.log(dateValue);
+    onChange(dateValue as DateType, '');
+  };
+  const onCancel = () => {
+    triggerOpen(false);
+  };
+
+ 
   let panelNode: React.ReactNode = (
     <PickerPanel<DateType>
       {...panelProps}
+      onDateConfirm={onDateConfirm}
+      onCancel={onCancel}
+      disabledConfirm={!dateValue}
       generateConfig={generateConfig}
       className={classNames({
         [`${prefixCls}-panel-focused`]: !typing,
@@ -408,6 +423,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
         onSelect?.(date);
         setSelectedValue(date);
       }}
+      onChange={(e) => console.log(e)}
       direction={direction}
       onPanelChange={(viewDate, mode) => {
         const { onPanelChange } = props;
@@ -497,7 +513,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     if (type === 'submit' || (type !== 'key' && !needConfirmButton)) {
       // triggerChange will also update selected values
       triggerChange(date);
-      triggerOpen(false);
+      // triggerOpen(false);
     }
   };
   const popupPlacement = direction === 'rtl' ? 'bottomRight' : 'bottomLeft';

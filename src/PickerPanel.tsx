@@ -97,6 +97,9 @@ export type PickerPanelDateProps<DateType> = {
   // Time
   showTime?: boolean | SharedTimeProps<DateType>;
   disabledTime?: DisabledTime<DateType>;
+  disabledConfirm?: boolean;
+  onDateConfirm?:()=>void;
+  onCancel?:()=>void;
 } & PickerPanelSharedProps<DateType>;
 
 export type PickerPanelTimeProps<DateType> = {
@@ -148,8 +151,13 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
     hourStep = 1,
     minuteStep = 1,
     secondStep = 1,
+    disabledConfirm = true,
+    onDateConfirm,
+    onCancel,
   } = props as MergedPickerPanelProps<DateType>;
 
+
+  
   // const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
 
   const [dateView, setDate] = React.useState<DateType>(value);
@@ -460,9 +468,13 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
         panelNode = (
           <DatePanel<DateType>
             {...pickerProps}
-            value={dateView}
+            // value={dateView}
+            // onSelect={(date, type) => {
+            //   setDate(date);
+            // }}
             onSelect={(date, type) => {
-              setDate(date);
+              setViewDate(date);
+              triggerSelect(date, type);
             }}
           />
         );
@@ -535,15 +547,16 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
   //   );
   // }
 
-  const onDateConfirm = () => {
-    setViewDate(dateView);
-    triggerSelect(dateView, 'mouse');
-  };
-  const onCancel = () => {
-    setViewDate(value);
-    triggerSelect(value, 'mouse');
-  };
-  console.log(viewDate, value);
+  // const onDateConfirm = () => {
+  //   // setViewDate(dateView);
+  //   // triggerSelect(dateView, 'mouse');
+  // };
+  // const onCancel = () => {
+  //   setViewDate(value);
+  //   triggerSelect(value, 'mouse');
+  // };
+  // console.log(disabledConfirm)
+  // console.log(viewDate, value);
   return (
     <PanelContext.Provider
       value={{
@@ -575,8 +588,9 @@ function PickerPanel<DateType>(props: PickerPanelProps<DateType>) {
               Cancel
             </button>
             <button
-              disabled={!dateView}
-              className={classNames(dateView ? `confirm-btn` : 'disabled-btn')}
+              // disabled={!dateView}
+              disabled={disabledConfirm}
+              className={classNames(!disabledConfirm ? `confirm-btn` : 'disabled-btn')}
               onClick={onDateConfirm}
             >
               Filter

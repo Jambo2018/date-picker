@@ -240,7 +240,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const startInputRef = useRef<HTMLInputElement>(null);
   const endInputRef = useRef<HTMLInputElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
-
+  const [rangeValues, setRangeValues] = useState<null | DateType[]>(value||defaultValue);
   // ============================ Warning ============================
   if (process.env.NODE_ENV !== 'production') {
     legacyPropsWarning(props);
@@ -402,9 +402,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   }
 
   function triggerChange(newValue: RangeValue<DateType>, sourceIndex: 0 | 1) {
+    console.log(newValue);
     let values = newValue;
     let startValue = getValue(values, 0);
     let endValue = getValue(values, 1);
+    setRangeValues(values);
 
     // >>>>> Format start & end values
     if (startValue && endValue && generateConfig.isAfter(startValue, endValue)) {
@@ -470,7 +472,8 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         (!isEqual(generateConfig, getValue(mergedValue, 0), startValue) ||
           !isEqual(generateConfig, getValue(mergedValue, 1), endValue))
       ) {
-        onChange(values, [startStr, endStr]);
+        // onChange(values, [startStr, endStr]);
+        // setRangeValues(values);
       }
     }
 
@@ -493,7 +496,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       // Delay to focus to avoid input blur trigger expired selectedValues
       triggerOpenAndFocus(nextOpenIndex);
     } else {
-      triggerOpen(false, sourceIndex);
+      // triggerOpen(false, sourceIndex);
     }
   }
 
@@ -785,6 +788,12 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     };
   });
 
+  const disabledConfirm = React.useMemo(() => {
+    if (rangeValues === null) return false;
+    const realValues = rangeValues.filter((i) => i);
+    return realValues.length !== 2;
+  }, [rangeValues]);
+
   // ============================= Panel =============================
   function renderPanel(
     panelPosition: 'left' | 'right' | false = false,
@@ -819,6 +828,15 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         });
     }
 
+    const onDateConfirm=()=>{
+      triggerOpen(false,0);
+      triggerOpen(false,1);
+      onChange(rangeValues as [DateType,DateType], ['', '']);
+    }
+    const onCancel=()=>{
+      triggerOpen(false,0);
+      triggerOpen(false,1);
+    }
     return (
       <RangeContext.Provider
         value={{
@@ -831,6 +849,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         <PickerPanel<DateType>
           {...(props as any)}
           {...panelProps}
+          onDateConfirm={onDateConfirm}
+          onCancel={onCancel}
+          disabledConfirm={disabledConfirm}
           dateRender={panelDateRender}
           showTime={panelShowTime}
           mode={mergedModes[mergedActivePickerIndex]}
@@ -882,6 +903,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     );
   }
 
+  console.log("defaultValue",defaultValue,value)
   let arrowLeft: number = 0;
   let panelLeft: number = 0;
   if (
