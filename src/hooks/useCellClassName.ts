@@ -48,7 +48,7 @@ export default function useCellClassName<DateType>({
       hoverValue,
       currentDate,
     );
-    console.log(showHover)
+    // console.log(showHover)
     function isRangeStart() {
       if (!rangeStart) return false;
       if (isSameCell(currentDate, rangeStart)) {
