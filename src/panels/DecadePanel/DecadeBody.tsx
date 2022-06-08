@@ -42,6 +42,8 @@ function DecadeBody<DateType>(props: YearBodyProps<DateType>) {
       [`${cellPrefixCls}-in-view`]:
         startDecadeYear <= startDecadeNumber && endDecadeNumber <= endDecadeYear,
       [`${cellPrefixCls}-selected`]: startDecadeNumber === decadeYearNumber,
+      // TODO：useCellClassnames
+      [`${cellPrefixCls}-date-hover`]: true,
     };
   };
 
@@ -51,7 +53,7 @@ function DecadeBody<DateType>(props: YearBodyProps<DateType>) {
       rowNum={DECADE_ROW_COUNT}
       colNum={DECADE_COL_COUNT}
       baseDate={baseDecadeYear}
-      getCellText={date => {
+      getCellText={(date) => {
         const startDecadeNumber = generateConfig.getYear(date);
         return `${startDecadeNumber}-${startDecadeNumber + DECADE_UNIT_DIFF_DES}`;
       }}

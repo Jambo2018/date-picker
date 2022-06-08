@@ -131,7 +131,7 @@
   }
 
   // ===================== Shared Panel =====================
-  // &-decade-panel,
+  &-decade-panel,
   &-year-panel,
   &-month-panel,
   &-week-panel,
@@ -247,8 +247,18 @@
     }
 
     &-today > &-inner {
-      border: 1px solid @--main-color-deep;
-      border-radius: 20px;
+      position: relative;
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid @--main-color-deep;
+        border-radius: 50%;
+        box-sizing: border-box;
+        content: '';
+      }
     }
     &-range-start > &-inner,
     &-range-end > &-inner,
