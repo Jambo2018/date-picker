@@ -68,7 +68,8 @@ export type PickerSharedProps<DateType> = {
   superNextIcon?: React.ReactNode;
   getPopupContainer?: (node: HTMLElement) => HTMLElement;
   panelRender?: (originPanel: React.ReactNode) => React.ReactNode;
-  inputRender?: (props: React.InputHTMLAttributes<HTMLInputElement>) => React.ReactNode;
+  // inputRender?: (props: React.InputHTMLAttributes<HTMLInputElement>) => React.ReactNode;
+  inputRender?: (selected: boolean, disabled: boolean,ref:HTMLDivElement) => React.ReactNode;
 
   // Events
   onChange: (value: DateType | null, dateString: string) => void;
@@ -179,7 +180,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     inputRender,
   } = props as MergedPickerProps<DateType>;
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLDivElement>(null);
 
   const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
 
@@ -494,10 +495,12 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
   };
 
   const inputNode: React.ReactNode = inputRender ? (
-    inputRender(mergedInputProps)
+    // inputRender(mergedInputProps)
+    inputRender(!!value, disabled, inputRef)
   ) : (
     <input {...mergedInputProps} />
   );
+  
 
   // ============================ Warning ============================
   if (process.env.NODE_ENV !== 'production') {

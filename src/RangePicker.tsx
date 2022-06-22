@@ -116,6 +116,7 @@ export type RangePickerSharedProps<DateType> = {
   activePickerIndex?: 0 | 1;
   dateRender?: RangeDateRender<DateType>;
   panelRender?: (originPanel: React.ReactNode) => React.ReactNode;
+  inputRender?: (selected: boolean, disabled: boolean, ref: HTMLDivElement) => React.ReactNode;
 };
 
 type OmitPickerProps<Props> = Omit<
@@ -226,9 +227,11 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
     direction,
     activePickerIndex,
     autoComplete = 'off',
+    inputRender,
   } = props as MergedRangePickerProps<DateType>;
 
   const needConfirmButton: boolean = (picker === 'date' && !!showTime) || picker === 'time';
+  const inputRef = React.useRef<HTMLDivElement>(null);
 
   // We record opened status here in case repeat open with picker
   const openRecordsRef = useRef<Record<number, boolean>>({});
@@ -398,8 +401,9 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   function triggerOpenAndFocus(index: 0 | 1) {
     triggerOpen(true, index);
     // Use setTimeout to make sure panel DOM exists
+    console.log(inputRef.current);
     setTimeout(() => {
-      const inputRef = [startInputRef, endInputRef][index];
+      // const inputRef = [startInputRef, endInputRef][index];
       if (inputRef.current) {
         inputRef.current.focus();
       }
@@ -437,14 +441,13 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       rangeValuesRef.current = [newValue[0], null];
     } else if (rangeValuesRef.current[0]) {
       if (isBefore(rangeValuesRef.current[0] as unknown as Date, newValue[0] as unknown as Date)) {
-    
         setSelectedValue([rangeValuesRef.current[0], newValue[0]]);
         setInnerValue([rangeValuesRef.current[0], newValue[0]]);
         rangeValuesRef.current = [rangeValuesRef.current[0], newValue[0]];
-        } else {
-          setSelectedValue([newValue[0], rangeValuesRef.current[0]]);
-          setInnerValue([newValue[0], rangeValuesRef.current[0]]);
-          rangeValuesRef.current = [newValue[0], rangeValuesRef.current[0]];
+      } else {
+        setSelectedValue([newValue[0], rangeValuesRef.current[0]]);
+        setInnerValue([newValue[0], rangeValuesRef.current[0]]);
+        rangeValuesRef.current = [newValue[0], rangeValuesRef.current[0]];
       }
     } else {
       setSelectedValue([newValue[0], null]);
@@ -712,20 +715,21 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const onPickerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // When click inside the picker & outside the picker's input elements
     // the panel should still be opened
-    if (onClick) {
-      onClick(e);
-    }
-    if (
-      !mergedOpen &&
-      !startInputRef.current.contains(e.target as Node) &&
-      !endInputRef.current.contains(e.target as Node)
-    ) {
-      if (!mergedDisabled[0]) {
-        triggerOpenAndFocus(0);
-      } else if (!mergedDisabled[1]) {
-        triggerOpenAndFocus(1);
-      }
-    }
+    // if (onClick) {
+    //   onClick(e);
+    // }
+    // if (
+    //   !mergedOpen &&
+    //   !startInputRef.current.contains(e.target as Node) &&
+    //   !endInputRef.current.contains(e.target as Node)
+    // ) {
+    //   if (!mergedDisabled[0]) {
+    //     triggerOpenAndFocus(0);
+    //   } else if (!mergedDisabled[1]) {
+    //     triggerOpenAndFocus(1);
+    //   }
+    // }
+    triggerOpenAndFocus(0);
   };
 
   const onPickerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -1087,21 +1091,31 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
         direction={direction}
       >
         <div
+          onClick={onPickerClick}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onMouseDown={onPickerMouseDown}
+          onMouseUp={onMouseUp}
+        >
+          {inputRender(!!value && !!value[0], !!disabled, inputRef)}
+        </div>
+        {/* <div
           ref={containerRef}
           className={classNames(prefixCls, `${prefixCls}-range`, className, {
             [`${prefixCls}-disabled`]: mergedDisabled[0] && mergedDisabled[1],
             [`${prefixCls}-focused`]: mergedActivePickerIndex === 0 ? startFocused : endFocused,
             [`${prefixCls}-rtl`]: direction === 'rtl',
           })}
-          style={style}
+          // style={style}
+          style={{ width: '100px', height: '100px', background: '#F40' }}
           onClick={onPickerClick}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           onMouseDown={onPickerMouseDown}
           onMouseUp={onMouseUp}
           {...getDataOrAriaProps(props)}
-        >
-          <div
+        > */}
+        {/* <div
             className={classNames(`${prefixCls}-input`, {
               [`${prefixCls}-input-active`]: mergedActivePickerIndex === 0,
               [`${prefixCls}-input-placeholder`]: !!startHoverValue,
@@ -1155,10 +1169,10 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
               width: activeBarWidth,
               position: 'absolute',
             }}
-          />
-          {suffixNode}
+          /> */}
+        {/* {suffixNode}
           {clearNode}
-        </div>
+        </div> */}
       </PickerTrigger>
     </PanelContext.Provider>
   );

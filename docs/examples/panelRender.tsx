@@ -12,20 +12,19 @@ import classNames from 'classnames';
 
 const defaultStartValue = new Date('2019-09-03 05:02:03');
 const defaultEndValue = new Date('2019-11-28 01:02:03');
-const defaultValue: [Date, Date] = [null,null];
+const defaultValue: [Date, Date] = [null, null];
 
-const calendarRender = (mergedInputProps) => {
-  const { disabled, value } = mergedInputProps;
-  // console.log(disabled, value, mergedInputProps);
+const calendarRender = (selected, disabled, ref) => {
   return (
     <div
+      ref={ref}
       className={classNames(`calendar`, {
-        ['calendar-selected']: value,
+        ['calendar-selected']: selected,
         ['calendar-disabled']: disabled,
       })}
     >
       <svg
-        {...mergedInputProps}
+        // {...mergedInputProps}
         width="24"
         height="24"
         viewBox="0 0 24 24"
