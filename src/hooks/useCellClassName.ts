@@ -33,6 +33,8 @@ export default function useCellClassName<DateType>({
     // const prevDate = offsetCell(currentDate, -1);
     // const nextDate = offsetCell(currentDate, 1);
 
+
+    
     const rangeStart = getValue(rangedValue, 0);
     const rangeEnd = getValue(rangedValue, 1);
 

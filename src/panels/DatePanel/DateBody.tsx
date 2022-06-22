@@ -9,6 +9,7 @@ import {
 } from '../../utils/dateUtil';
 import type { Locale } from '../../interface';
 import RangeContext from '../../RangeContext';
+import PanelContext from '@/PanelContext';
 import useCellClassName from '../../hooks/useCellClassName';
 import PanelBody from '../PanelBody';
 
@@ -36,6 +37,8 @@ export type DateBodyProps<DateType> = {
 function DateBody<DateType>(props: DateBodyProps<DateType>) {
   const { prefixCls, generateConfig, prefixColumn, locale, rowCount, viewDate, value, dateRender } =
     props;
+
+  const panel_context = React.useContext(PanelContext);
 
   const { rangedValue, hoverValue } = React.useContext(RangeContext);
 
@@ -66,7 +69,7 @@ function DateBody<DateType>(props: DateBodyProps<DateType>) {
     value,
     generateConfig,
     rangedValue: prefixColumn ? null : rangedValue,
-    hoverValue: prefixColumn ? null : hoverValue,
+    hoverValue: prefixColumn ? null : rangedValue ? hoverValue : panel_context.hoverValue,
     isSameCell: (current, target) => isSameDate(generateConfig, current, target),
     isInView: (date) => isSameMonth(generateConfig, date, viewDate),
     offsetCell: (date, offset) => generateConfig.addDate(date, offset),

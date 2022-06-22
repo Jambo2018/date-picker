@@ -19,7 +19,7 @@ export type PanelContextProps = {
   hideRanges?: boolean;
   open?: boolean;
   mode?: PanelMode;
-
+  hoverValue?: Date;
   /** Only used for TimePicker and this is a deprecated prop */
   defaultOpenValue?: any;
 };

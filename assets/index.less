@@ -11,6 +11,26 @@
 @--main-color-deep: #5a66f9;
 @--main-color-disabled:rgba(90, 102, 249, 0.6);
 
+.calendar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 12px;
+  background-color: @--table-bg-color;
+  border: 1px solid @--border-color;
+  border-radius: 8px;
+  cursor: pointer;
+  &-selected,
+  &:hover {
+    background-color: @--option-bg-color;
+  }
+        
+  &-disabled{
+    cursor: default;
+    background-color: @--option-bg-color;
+  }
+}
 .week-header {
   position: relative;
   height: 36px;
@@ -252,11 +272,11 @@
         position: absolute;
         top: 0;
         left: 0;
+        box-sizing: border-box;
         width: 100%;
         height: 100%;
         border: 1px solid @--main-color-deep;
         border-radius: 50%;
-        box-sizing: border-box;
         content: '';
       }
     }
@@ -477,7 +497,7 @@
     // box-shadow: 0 0 1px red;
 
     &-range {
-      padding: 10px 0;
+      // padding: 10px 0;
     }
 
     &-hidden {

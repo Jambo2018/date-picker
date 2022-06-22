@@ -405,7 +405,6 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
     triggerOpen(false);
   };
 
- 
   let panelNode: React.ReactNode = (
     <PickerPanel<DateType>
       {...panelProps}
@@ -529,6 +528,7 @@ function InnerPicker<DateType>(props: PickerProps<DateType>) {
         defaultOpenValue,
         onDateMouseEnter: onEnter,
         onDateMouseLeave: onLeave,
+        hoverValue: hoverValue && new Date(hoverValue),
       }}
     >
       <PickerTrigger

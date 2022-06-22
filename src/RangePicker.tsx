@@ -34,6 +34,7 @@ import useRangeViewDates from './hooks/useRangeViewDates';
 import type { DateRender } from './panels/DatePanel/DateBody';
 import useHoverValue from './hooks/useHoverValue';
 import { legacyPropsWarning } from './utils/warnUtil';
+import { isBefore } from 'date-fns';
 
 function reorderValues<DateType>(
   values: RangeValue<DateType>,
@@ -239,7 +240,7 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
   const separatorRef = useRef<HTMLDivElement>(null);
   const startInputRef = useRef<HTMLInputElement>(null);
   const endInputRef = useRef<HTMLInputElement>(null);
-  const arrowRef = useRef<HTMLDivElement>(null);
+  // const arrowRef = useRef<HTMLDivElement>(null);
   // const [rangeValues, setRangeValues] = useState<null | DateType[]>(value || defaultValue);
   const rangeValuesRef = useRef<null | DateType[]>(value || defaultValue);
   // ============================ Warning ============================
@@ -435,9 +436,16 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
       setInnerValue([newValue[0], null]);
       rangeValuesRef.current = [newValue[0], null];
     } else if (rangeValuesRef.current[0]) {
-      setSelectedValue([rangeValuesRef.current[0], newValue[0]]);
-      setInnerValue([rangeValuesRef.current[0], newValue[0]]);
-      rangeValuesRef.current = [rangeValuesRef.current[0], newValue[0]];
+      if (isBefore(rangeValuesRef.current[0] as unknown as Date, newValue[0] as unknown as Date)) {
+    
+        setSelectedValue([rangeValuesRef.current[0], newValue[0]]);
+        setInnerValue([rangeValuesRef.current[0], newValue[0]]);
+        rangeValuesRef.current = [rangeValuesRef.current[0], newValue[0]];
+        } else {
+          setSelectedValue([newValue[0], rangeValuesRef.current[0]]);
+          setInnerValue([newValue[0], rangeValuesRef.current[0]]);
+          rangeValuesRef.current = [newValue[0], rangeValuesRef.current[0]];
+      }
     } else {
       setSelectedValue([newValue[0], null]);
       setInnerValue([newValue[0], null]);
@@ -943,28 +951,28 @@ function InnerRangePicker<DateType>(props: RangePickerProps<DateType>) {
 
     // If panelWidth - arrowWidth - arrowMarginLeft < arrowLeft, panel should move to right side.
     // If offsetLeft > arrowLeft, arrow position is absolutely right, because arrowLeft is not calculated with arrow margin.
-    if (
-      panelDivRef.current.offsetWidth &&
-      arrowRef.current.offsetWidth &&
-      arrowLeft >
-        panelDivRef.current.offsetWidth -
-          arrowRef.current.offsetWidth -
-          (direction === 'rtl' || arrowRef.current.offsetLeft > arrowLeft
-            ? 0
-            : arrowRef.current.offsetLeft)
-    ) {
-      panelLeft = arrowLeft;
-    }
+    // if (
+    //   panelDivRef.current.offsetWidth &&
+    //   arrowRef.current.offsetWidth &&
+    //   arrowLeft >
+    //     panelDivRef.current.offsetWidth -
+    //       arrowRef.current.offsetWidth -
+    //       (direction === 'rtl' || arrowRef.current.offsetLeft > arrowLeft
+    //         ? 0
+    //         : arrowRef.current.offsetLeft)
+    // ) {
+    //   panelLeft = arrowLeft;
+    // }
   }
 
-  const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
+  // const arrowPositionStyle = direction === 'rtl' ? { right: arrowLeft } : { left: arrowLeft };
 
   const rangePanel = (
     <div
       className={classNames(`${prefixCls}-range-wrapper`, `${prefixCls}-${picker}-range-wrapper`)}
       style={{ minWidth: popupMinWidth }}
     >
-      <div ref={arrowRef} className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} />
+      {/* <div ref={arrowRef} className={`${prefixCls}-range-arrow`} style={arrowPositionStyle} /> */}
 
       <div
         className={`${prefixCls}-panel-container`}
